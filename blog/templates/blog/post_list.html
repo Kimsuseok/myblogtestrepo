@@ -1,34 +1,13 @@
-{% extends 'base_layout.html' %}
 {% load bootstrap3 %}
 
-{% block javascript %}
-    <script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
-
-    <script>
-        jQuery(document).ready(function($) {
-            var content = $('#marked_content > p');
-            console.log(content);
-
-            for(var i=0; i<content.length; i++ ) {
-                console.log(content[i]);
-                var content_value = content[i].childNodes[0];
-                console.log(content_value);
-                console.log(marked(content_value+""));
-            }
-        });
-    </script>
-{% endblock %}
-
-{% block page_title %}Post 목록{% endblock %}
-
-{% block body %}
-    <h1>게시물 목록</h1>
-
     {% for post in posts %}
-        <h2><a href="{% url 'blog:detail' pk=post.pk %}">{{ post.title }}</a></h2>
-        <div id="marked_content"><p>{{ post.content }}</p></div>
-        <p>{{ post.created_at }}</p>
+        <div class="post-preview">
+            <h2 class="post-title"><a href="{% url 'blog:detail' pk=post.pk %}">{{ post.title }}</a></h2>
+            {% include 'blog/post_contents.html' %}
+            <p class="post-meta">Posted by {{ post.user }} on {{ post.created_date }} </p>
+        </div>
+
+        <hr>
 
         {% empty %}
         <p>게시물이 없습니다.</p>
@@ -53,4 +32,3 @@
         <a href="{% url 'blog:write' %}">새 글 쓰기</a>
     </p>
 
-{% endblock %}

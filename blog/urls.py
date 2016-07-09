@@ -10,7 +10,10 @@ urlpatterns = [
     url(r'^edit/(?P<pk>[0-9]+)/$', views.post_edit, name='edit'),
     url(r'^delete/(?P<pk>[0-9]+)/$', views.post_delete, name='delete'),
     url(r'^(?P<pk>[0-9]+)/$', views.post_detail, name='detail'),
-    url(r'^$', views.post_list, name='list'),
+    url(r'^list/$', views.post_list, name='list'),
+    url(r'^about/$', views.about, name='about'),
+    url(r'^contact/$', views.contact, name='contact'),
+    url(r'^$', views.index, name='index'),
 ]
 
 #TODO

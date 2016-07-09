@@ -3,9 +3,9 @@
 
 {% block page_title %}
     {% if post %}
-        게시물 편집
+        Edit - {{ post.title}}
     {% else %}
-        게시물 작성
+        Post 작성
     {% endif %}
 {% endblock %}
 
@@ -33,7 +33,7 @@
 
     });
 
-    	//첨부파일 추가
+    //첨부파일 추가
     var rowIndex = 1;
 
     function addFile(form){
@@ -63,34 +63,24 @@
 
 {% block body %}
 
+    <div class="site-heading">
+        <span class="subheading">Bootstrap Markdown Editor</span>
+    </div>
     <div class="container">
-        <h1>Bootstrap Markdown Editor</h1>
+
 
         <form id="form" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <label for="id_title">글 제목</label>
             <input type="text" name="title" id="id_title" value="{{ post.title }}"/>
             <textarea name="content" id="editor">{{ post.content }}</textarea>
-            <textarea id="editor2">보자</textarea>
             <p id="realtime_preview"></p>
-
 
             {{ formset.management_form }}
                 {% for form in formset %}
                     {{ form }}
                 {% endfor %}
 
-            <table id='insertTable' border=0 cellpadding=0 cellspacing=0>
-        <tr>
-        	<td valign=bottom>
-        		<INPUT type='file' maxLength='100' name='filename1' size='25'>
-        	</td>
-        	<td width=100>
-        		<input type="button" value="추가" onClick="addFile(this.form)" border=0 style='cursor:hand'>
-        		<input type="button" value="삭제" onClick='deleteFile(this.form)' border=0 style='cursor:hand'>
-        	</td>
-        </tr>
-    </table>
             <input type="hidden" name="rowCount" value="1">
             <button type="submit">저장</button>
         </form>

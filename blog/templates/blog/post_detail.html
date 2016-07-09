@@ -2,44 +2,109 @@
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
-{% block javascript %}
-    <script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
-
-    <script>
-        jQuery(document).ready(function($) {
-            var content = $('#marked_content > p');
-            var content_value = content.text();
-            content.html(marked(content_value));
-        });
-
-    </script>
-
-    <script>
-    function hahaha(origin) {
-        return marked(origin);
-    }
-
-    </script>
-
-{% endblock %}
-
-{% block page_title %}{{ post.title }} - 게시물 보기{% endblock %}
+{% block page_title %}{{ post.title }}{% endblock %}
 
 {% block body %}
 
-    <h1>{{ post.title }} </h1>
-    <p id="demo">
-        <script language="JavaScript">document.getElementById("demo").innerHTML=marked({{ post.content }};</script>
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    Menu <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand" href="{% url 'blog:index' %}">KIMSS</a>
+            </div>
 
-    </p>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="{% url 'blog:index' %}">Home</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'blog:about'%}">About</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'blog:contact'%}">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
 
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header class="intro-header" style="background-image: url({% static 'img/post-bg.jpg' %})">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>{{ post.title }}</h1>
+                        <span class="post-meta">Posted by {{ post.user }} on {{ post.created_date }} </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
 
+    <!-- Post Content -->
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    {% include 'blog/post_contents.html' %}
+                </div>
+            </div>
+        </div>
+    </article>
 
+    <hr>
 
-    <P><a href="{% url 'blog:edit' pk=post.pk %}">글 수정</a></P>
-    <P><a href="{% url 'blog:delete' pk=post.pk %}">글 삭제</a></P>
-    <P><a href="{% url 'blog:list' %}">글 목록</a></P>
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                        <li>
+                            <a href="#">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                    <p class="copyright text-muted">Copyright &copy; Your Website 2016</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <a href="{% url 'blog:edit' pk=post.pk %}">글 수정</a> |
+    <a href="{% url 'blog:delete' pk=post.pk %}">글 삭제</a> |
+    <a href="{% url 'blog:index' %}">글 목록</a>
 
     <div id="fb-root"></div>
 

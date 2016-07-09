@@ -29,10 +29,33 @@ logger = logging.getLogger('django')
 
 """
 
+def index(request):
+    per_page = 5
+    request_page = request.GET.get('page', 1)
+
+    # 모든 Post를 불러온다.
+    posts = Post.objects.all()
+
+    # Paginator가 page값에 대한 예외처리를 알아서 하지는 않는다. 예외처리는 별도로 한다.
+    pagignator = Paginator(posts, per_page)
+    try:
+        paged_posts = pagignator.page(request_page)
+    except PageNotAnInteger:
+        paged_posts = pagignator.page(1)
+    except EmptyPage:
+        paged_posts = []
+
+    ctx = {
+        'posts' : paged_posts,
+    }
+
+    return render(request, 'blog/index.html', ctx)
+
+
 # Create your views here.
 def post_list(request):
 
-    per_page = 10
+    per_page = 5
     request_page = request.GET.get('page', 1)
 
     # 모든 Post를 불러온다.
@@ -59,7 +82,6 @@ def post_detail(request, pk):
 
     ctx = {
         'post' : post,
-
     }
 
     return render(request, 'blog/post_detail.html', ctx)
@@ -143,6 +165,15 @@ def post_delete(request, pk):
     if request.method == 'POST':
         post.delete()
         return redirect('blog:list')
+
+    return render(request, 'blog/post_delete.html', {'post' : post})
+
+def about(request):
+    return render(request, 'blog/about.html')
+
+def contact(request):
+    return render(request, 'blog/contact.html')
+
 
 
 def category_list(request):
