@@ -1,0 +1,99 @@
+{% extends 'base_layout.html' %}
+{% load static from staticfiles %}
+
+{% block page_title %}
+    {% if post %}
+        게시물 편집
+    {% else %}
+        게시물 작성
+    {% endif %}
+{% endblock %}
+
+{% block javascript %}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
+
+    <link href="{% static 'bootstrap-markdown-editor/dist/css/bootstrap-markdown-editor.css' %}" rel="stylesheet">
+    <script src="{% static 'bootstrap-markdown-editor/dist/js/bootstrap-markdown-editor.js' %}"></script>
+<script>
+
+    jQuery(document).ready(function($) {
+        $('#editor').markdownEditor({
+            preview: true,
+            onPreview: function (content, callback) {
+                var parsed_result = marked(content);
+
+                var realtime_preview = $('#realtime_preview');
+                realtime_preview.html(parsed_result);
+
+                callback(parsed_result);
+
+            }
+        });
+
+    });
+
+    	//첨부파일 추가
+    var rowIndex = 1;
+
+    function addFile(form){
+        if(rowIndex > 4) return false;
+
+        rowIndex++;
+        var getTable = document.getElementById("insertTable");
+	    var oCurrentRow = getTable.insertRow(getTable.rows.length);
+        var oCurrentCell = oCurrentRow.insertCell(0);
+        oCurrentCell.innerHTML = "<tr><td colspan=2><INPUT TYPE='FILE' NAME='filename" + rowIndex + "' size=25></td></tr>";
+    }
+
+	//첨부파일 삭제
+    function deleteFile(form){
+        if(rowIndex<2){
+            return false;
+        }else{
+        	rowIndex--;
+			var getTable = document.getElementById("insertTable");
+			getTable.deleteRow(rowIndex);
+       }
+    }
+
+</script>
+
+{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <h1>Bootstrap Markdown Editor</h1>
+
+        <form id="form" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="id_title">글 제목</label>
+            <input type="text" name="title" id="id_title" value="{{ post.title }}"/>
+            <textarea name="content" id="editor">{{ post.content }}</textarea>
+            <textarea id="editor2">보자</textarea>
+            <p id="realtime_preview"></p>
+
+
+            {{ formset.management_form }}
+                {% for form in formset %}
+                    {{ form }}
+                {% endfor %}
+
+            <table id='insertTable' border=0 cellpadding=0 cellspacing=0>
+        <tr>
+        	<td valign=bottom>
+        		<INPUT type='file' maxLength='100' name='filename1' size='25'>
+        	</td>
+        	<td width=100>
+        		<input type="button" value="추가" onClick="addFile(this.form)" border=0 style='cursor:hand'>
+        		<input type="button" value="삭제" onClick='deleteFile(this.form)' border=0 style='cursor:hand'>
+        	</td>
+        </tr>
+    </table>
+            <input type="hidden" name="rowCount" value="1">
+            <button type="submit">저장</button>
+        </form>
+    </div>
+
+{% endblock %}
